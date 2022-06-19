@@ -1,0 +1,26 @@
+name: Global workflow to rule them all
+
+on:
+  push:
+    branches: [ main ] #or main
+
+jobs:
+
+  replicate_changes:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: derberg/copy-files-to-other-repositories@v1.0.0
+        with:
+          github_token: ${{ secrets.CUSTOM_TOKEN }}
+          #you must specify what pattern to include otherwise all files from the repository will be replicated 
+          patterns_to_include: '.github/workflows'
+          #must have, so the workflow do not copy this workflow file to all other repos. It should be only in one, main, .github repo
+          patterns_to_ignore: '.github/workflows/main1.yml'
+
+          repos_to_ignore: billionelectrons.github.io
+          committer_username: rohitsam
+          committer_email: rohit7svp@gmail.com
+          commit_message: "ci: update global workflows"
